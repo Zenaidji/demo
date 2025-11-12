@@ -1,0 +1,53 @@
+name: Java CI with Maven
+on:
+  push:
+    branches: [ "master" ]
+jobs:
+  installation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        run: sudo apt install openjdk-17-jdk -y
+
+      - name: Set up maven
+        run: sudo apt install -y maven
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build
+        run: mvn compile -Dskiptests
+
+      - name: packaging
+        run: mvn clean package -DskipTests
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+            name: demo-jar
+            path: target/demo*.jar
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: demo-jar
+          path: ./
+      - name: copy and excute package
+        env:
+          SSH_VPS_KEY: ${{ secrets.SSH_VPS_KEY }}
+
+        run: echo "$SSH_VPS_KEY" > key & chmod 600 key & scp -o StrictHostKeyChecking=no  -i key  target/demo*.jar  ubuntu@137.74.43.220:~ & nohup java -jar ~/demo*.jar  > app.log 2>&1 &
+
+
+
+
+
+
+
+
+
+
+
