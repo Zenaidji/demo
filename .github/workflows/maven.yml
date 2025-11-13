@@ -6,7 +6,7 @@ jobs:
   installation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+
 
       - name: Set up JDK 17
         run: sudo apt install openjdk-17-jdk -y
@@ -15,22 +15,24 @@ jobs:
         run: sudo apt install -y maven
   build:
     runs-on: ubuntu-latest
+    needs: installation
     steps:
+      - uses: actions/checkout@v4
       - name: build
-        run: mvn compile -Dskiptests
 
+        run: mvn clean compile
       - name: packaging
         run: mvn clean package -DskipTests
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-            name: demo-jar
-            path: target/demo*.jar
+          name: demo-jar
+          path: target/demo*.jar
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: demo-jar
           path: ./
