@@ -20,11 +20,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: build
         run: mvn clean compile
-
-        run: mvn clean compile
       - name: packaging
         run: mvn clean package -DskipTests
-      - name: Upload artifact
       - uses: actions/upload-artifact@v4
         with:
           name: demo-jar
