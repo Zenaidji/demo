@@ -18,7 +18,7 @@ jobs:
     needs: installation
     steps:
       - name: build
-        run: mvn compile -Dskiptests
+        run: mvn clean compile 
 
       - name: packaging
         run: mvn clean package -DskipTests
