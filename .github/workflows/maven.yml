@@ -17,8 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: installation
     steps:
-      # - name: build
-      #   run: mvn clean compile 
+      - name: build
+        working-directory: ./
+        run: mvn clean compile 
 
       - name: packaging
         run: mvn clean package -DskipTests
