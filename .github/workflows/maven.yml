@@ -15,6 +15,7 @@ jobs:
         run: sudo apt install -y maven
   build:
     runs-on: ubuntu-latest
+    needs: installation
     steps:
       - name: build
         run: mvn compile -Dskiptests
@@ -22,15 +23,16 @@ jobs:
       - name: packaging
         run: mvn clean package -DskipTests
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
             name: demo-jar
             path: target/demo*.jar
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: demo-jar
           path: ./
